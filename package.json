@@ -1,0 +1,162 @@
+{
+  "name": "kiva-tools",
+  "displayName": "KivaDB Tools",
+  "description": "Completion, hovers and a live connection to KivaDB for .kva files: run the command under the cursor, complete existing keys.",
+  "version": "1.0.0",
+  "publisher": "fomadev",
+  "license": "SEE LICENSE IN LICENSE",
+  "icon": "images/icon.png",
+  "homepage": "https://github.com/fomadev/kiva-tools#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fomadev/kiva-tools.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fomadev/kiva-tools/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "kivadb",
+    "kva",
+    "database",
+    "intellisense",
+    "completion"
+  ],
+  "main": "./out/src/extension.js",
+  "activationEvents": [
+    "onLanguage:kva"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "kva",
+        "aliases": [
+          "KivaDB",
+          "kva"
+        ],
+        "extensions": [
+          ".kva"
+        ]
+      }
+    ],
+    "commands": [
+      {
+        "command": "kivadb.connect",
+        "title": "Connect to a Server",
+        "category": "KivaDB",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "kivadb.disconnect",
+        "title": "Disconnect",
+        "category": "KivaDB"
+      },
+      {
+        "command": "kivadb.connectionMenu",
+        "title": "Connection",
+        "category": "KivaDB"
+      },
+      {
+        "command": "kivadb.runStatement",
+        "title": "Run the Command Under the Cursor",
+        "category": "KivaDB"
+      },
+      {
+        "command": "kivadb.runAllStatements",
+        "title": "Run Every Command on the Connection",
+        "category": "KivaDB"
+      },
+      {
+        "command": "kivadb.forgetPassword",
+        "title": "Forget the Connection Password",
+        "category": "KivaDB"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "kivadb.runStatement",
+          "when": "editorLangId == kva",
+          "group": "kivadb@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "kivadb.runStatement",
+          "when": "editorLangId == kva"
+        },
+        {
+          "command": "kivadb.runAllStatements",
+          "when": "editorLangId == kva"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "kivadb.runStatement",
+        "key": "ctrl+enter",
+        "mac": "cmd+enter",
+        "when": "editorLangId == kva && editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "KivaDB Tools",
+      "properties": {
+        "kivadb.host": {
+          "type": "string",
+          "default": "127.0.0.1",
+          "description": "The KivaDB server to connect to."
+        },
+        "kivadb.port": {
+          "type": "number",
+          "default": 2911,
+          "description": "Its KivaDB protocol port."
+        },
+        "kivadb.user": {
+          "type": "string",
+          "default": "kiva",
+          "markdownDescription": "Log in as this user. Its password is asked when the server requires one, and can be kept in VS Code's secret storage, never in the settings."
+        },
+        "kivadb.workspace": {
+          "type": "string",
+          "default": "",
+          "description": "Workspace to switch to after connecting. Empty: your home workspace."
+        },
+        "kivadb.tls": {
+          "type": "boolean",
+          "default": false,
+          "description": "Encrypt the connection (TLS), checking the certificate against the usual authorities."
+        },
+        "kivadb.tlsFingerprint": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Encrypt the connection and accept only the certificate with this SHA-256 fingerprint, as shown by `kivadb tls` on the server."
+        },
+        "kivadb.completeKeys": {
+          "type": "boolean",
+          "default": true,
+          "description": "While connected, offer the existing keys where a key name is expected."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p .",
+    "compile": "tsc -p .",
+    "watch": "tsc -p . -w",
+    "test": "tsc -p . && node --test out/test/tools.test.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "^5.9.3"
+  }
+}

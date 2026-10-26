@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install KivaDB, for the test against a real server
+        run: curl -sSL https://raw.githubusercontent.com/fomadev/kiva-db/main/install.sh | bash
+        continue-on-error: true
+
+      - run: npm test
+
+      - name: Check that the extension packages
+        run: npx vsce package --out extension.vsix
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix
+          path: extension.vsix
